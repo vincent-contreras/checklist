@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 import { ChecklistItemService } from '../service/checklist-item/checklist-item.service';
 import { ChecklistItemDto } from '../dto/checklist-item.dto'
 
@@ -6,12 +6,23 @@ import { ChecklistItemDto } from '../dto/checklist-item.dto'
 export class ChecklistItemController {
   constructor(private checklistItemsSvc: ChecklistItemService) {}
   @Post()
-  create(@Body() item: ChecklistItemDto): Promise<ChecklistItemDto> {
-    return this.checklistItemsSvc.create(item);
+  async create(@Body() item: ChecklistItemDto): Promise<ChecklistItemDto> {
+    return await this.checklistItemsSvc.create(item);
   }
 
   @Get()
-  getAll(): Promise<ChecklistItemDto[]> {
+  async getAll(): Promise<ChecklistItemDto[]> {
     return this.checklistItemsSvc.findAll();
+  }
+
+  @Get('/:id')
+  async getOne(@Param('id') id: number): Promise<ChecklistItemDto> {
+    console.log('in getOne: ' + id);
+    return this.checklistItemsSvc.findOne({ id: id} );
+  }
+
+  @Patch('/:id' )
+  async update(@Param('id') id: number, @Body() item: ChecklistItemDto): Promise<ChecklistItemDto> {
+    return this.checklistItemsSvc.updateOne(id, item.item);
   }
 }
