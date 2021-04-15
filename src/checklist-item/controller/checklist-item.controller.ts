@@ -17,7 +17,6 @@ export class ChecklistItemController {
 
   @Get('/:id')
   async getOne(@Param('id') id: number): Promise<ChecklistItemDto> {
-    console.log('in getOne: ' + id);
     return this.checklistItemsSvc.findOne({ id: id} );
   }
 
