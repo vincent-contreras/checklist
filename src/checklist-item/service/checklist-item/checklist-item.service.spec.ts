@@ -69,7 +69,6 @@ describe('--- ChecklistItemService ---', () => {
 
     return service.updateOne(updatedItem).then((result: ChecklistItemDto) => {
       expect(repo.update).toHaveBeenCalled();
-      console.log(result);
       expect(result).toBe(updatedItem);
     });
   });
