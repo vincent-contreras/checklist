@@ -44,10 +44,14 @@ describe('--- ChecklistItemService ---', () => {
   });
 
   it('Item을 추가할 수 있다', async () => {
+    // const result = await service.create(expectedResult)
+    // expect(result).toEqual(expectedResult);
 
-    // TODO
-    const returnList = await service.findAll();
-    expect(returnList).toEqual(resultArray);
+    return service.create(expectedResult).then((result: ChecklistItemDto) => {
+      expect(repo.create).toHaveBeenCalled();
+      expect(repo.save).toHaveBeenCalled();
+      expect(result).toBe(expectedResult);
+    });
   });
 
   it('List를 조회 할 수 있다', async () => {
@@ -80,7 +84,9 @@ describe('--- ChecklistItemService ---', () => {
     });
   });
   it('Item을 삭제할 수 있다', async () => {
-    await expect(service.deleteOne(expectedResult.id)).resolves.toEqual({ deleted: true });
+    await expect(service.deleteOne(expectedResult.id)).resolves.toEqual({
+      deleted: true,
+    });
   });
 
   afterEach(() => {

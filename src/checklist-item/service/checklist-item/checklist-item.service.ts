@@ -11,8 +11,10 @@ export class ChecklistItemService {
     private readonly checklistRepository: Repository<ChecklistItem>,
   ) {}
 
-  create(item: ChecklistItemDto): Promise<ChecklistItemDto> {
-    return this.checklistRepository.save(item);
+  async create(item: ChecklistItemDto): Promise<ChecklistItemDto> {
+    const newItem = this.checklistRepository.create(item);
+    await this.checklistRepository.save(newItem);
+    return newItem;
   }
   findAll(): Promise<ChecklistItemDto[]> {
     return this.checklistRepository.find();
