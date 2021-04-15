@@ -43,7 +43,14 @@ describe('--- ChecklistItemService ---', () => {
     expect(service).toBeDefined();
   });
 
-  it('리스트 조회 할 수 있다', async () => {
+  it('Item을 추가할 수 있다', async () => {
+
+    // TODO
+    const returnList = await service.findAll();
+    expect(returnList).toEqual(resultArray);
+  });
+
+  it('List를 조회 할 수 있다', async () => {
     const returnList = await service.findAll();
     expect(returnList).toEqual(resultArray);
   });

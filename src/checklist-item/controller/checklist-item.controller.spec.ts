@@ -23,7 +23,20 @@ describe('--- ChecklistItemController ---', () => {
     expect(controller).toBeDefined();
   });
 
-  it('아이템 한개 조회', async () => {
+  it('Item을 추가할 수 있다', async () => {
+    const item1 = new ChecklistItemDto();
+    item1.id = 1;
+    item1.item = 'Go to school';
+
+    service.create = jest.fn().mockResolvedValue(item1);
+
+    return controller.create(item1).then((result: ChecklistItemDto) => {
+      expect(service.create).toHaveBeenCalled();
+      expect(result).toBe(item1);
+    });
+  });
+
+  it('Item을 한개 조회', async () => {
     const expectedResult = new ChecklistItemDto();
     expectedResult.id = 0;
     expectedResult.item = 'Test';
@@ -77,11 +90,11 @@ describe('--- ChecklistItemController ---', () => {
     item1.id = 1;
     item1.item = 'Go to school';
 
-    service.deleteOne = jest.fn().mockResolvedValue(item1);
+    service.deleteOne = jest.fn().mockResolvedValue({ deleted: true });
 
-    return controller.deleteOne(item1.id).then((result: ChecklistItemDto) => {
+    return controller.deleteOne(item1.id).then((result) => {
       expect(service.deleteOne).toHaveBeenCalled();
-      expect(result).toBe(item1);
+      expect(result.deleted).toBe(true);
     });
   });
 

@@ -12,7 +12,6 @@ export class ChecklistItemService {
   ) {}
 
   create(item: ChecklistItemDto): Promise<ChecklistItemDto> {
-    // this.checklistItems.push(item);
     return this.checklistRepository.save(item);
   }
   findAll(): Promise<ChecklistItemDto[]> {
