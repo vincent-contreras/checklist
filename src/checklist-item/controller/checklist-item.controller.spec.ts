@@ -3,7 +3,6 @@ import { ChecklistItemController } from './checklist-item.controller';
 import { ChecklistItemDto } from '../dto/checklist-item.dto';
 import { ChecklistItemService } from '../service/checklist-item/checklist-item.service';
 
-
 jest.mock('../service/checklist-item/checklist-item.service');
 
 describe('--- ChecklistItemController ---', () => {

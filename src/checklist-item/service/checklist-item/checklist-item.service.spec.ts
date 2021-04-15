@@ -1,15 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ChecklistItemService } from './checklist-item.service';
 import { Repository } from 'typeorm';
-import { ChecklistItem } from '../../../../dist/checklist-item/entity/checklist-item';
-import Mock = jest.Mock;
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { ChecklistItemDto } from '../../dto/checklist-item.dto';
-import { getRepositoryToken } from "@nestjs/typeorm";
+import { ChecklistItem } from '../../entity/checklist-item.entity';
 
-describe('ChecklistItemService', () => {
+const expectedResult = new ChecklistItemDto();
+expectedResult.id = 0;
+expectedResult.item = 'Test';
+
+const resultArray = [expectedResult];
+
+describe('--- ChecklistItemService ---', () => {
   let service: ChecklistItemService;
-  let checklistRepoMock: MockType<Repository<ChecklistItem>>;
-  let checklistDtoRepoMock: MockType<Repository<ChecklistItemDto>>;
+  let repo: Repository<ChecklistItem>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -17,41 +21,63 @@ describe('ChecklistItemService', () => {
         ChecklistItemService,
         {
           provide: getRepositoryToken(ChecklistItem),
-          useFactory: repositoryMockFactory,
+          useValue: {
+            find: jest.fn().mockResolvedValue(resultArray),
+            findOne: jest.fn().mockResolvedValue(expectedResult),
+            create: jest.fn().mockResolvedValue(expectedResult),
+            save: jest.fn(),
+            update: jest.fn().mockResolvedValue(null),
+            delete: jest.fn().mockResolvedValue(null),
+          },
         },
       ],
     }).compile();
 
     service = module.get<ChecklistItemService>(ChecklistItemService);
-    checklistRepoMock = module.get(getRepositoryToken(ChecklistItem));
-    checklistDtoRepoMock = module.get(getRepositoryToken(ChecklistItemDto));
+    repo = module.get<Repository<ChecklistItem>>(
+      getRepositoryToken(ChecklistItem),
+    );
   });
 
-  it('should be return one value', () => {
-    // const item = new ChecklistItem()
-    // item.id = 0;
-    // item.item = 'Test';
-    // checklistRepoMock.findOne.mockReturnValue(item);
-    // expect(await service.findOne(item.id)).toEqual(item);
-    expect(true).toBe(true);
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  it('리스트 조회 할 수 있다', async () => {
+    const returnList = await service.findAll();
+    expect(returnList).toEqual(resultArray);
+  });
+
+  it('아이템 한개 조회', async () => {
+    return service
+      .findOne({ id: expectedResult.id })
+      .then((result: ChecklistItem) => {
+        expect(repo.findOne).toHaveBeenCalledWith({
+          id: expectedResult.id,
+        });
+        expect(result).toBe(expectedResult);
+      });
+  });
+
+  it('Item을 수정할 수 있다', async () => {
+    const updatedItem = new ChecklistItemDto();
+    updatedItem.id = 1;
+    updatedItem.item = 'Go to hell';
+
+    // override original find one function
+    repo.findOne = jest.fn().mockResolvedValue(updatedItem);
+
+    return service.updateOne(updatedItem).then((result: ChecklistItemDto) => {
+      expect(repo.update).toHaveBeenCalled();
+      console.log(result);
+      expect(result).toBe(updatedItem);
+    });
+  });
+  it('Item을 삭제할 수 있다', async () => {
+    await expect(service.deleteOne(expectedResult.id)).resolves.toEqual({ deleted: true });
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 });
-
-export const repositoryMockFactory: jest.Mock<
-  {
-    find: jest.Mock<any, any>;
-    findOne: jest.Mock<any, any>;
-    save: jest.Mock<any, any>;
-    update: jest.Mock<any, any>;
-  },
-  []
-> = jest.fn(() => ({
-  findOne: jest.fn(),
-  find: jest.fn(),
-  update: jest.fn(),
-  save: jest.fn(),
-}));
-
-export type MockType<T> = {
-  [P in keyof T]: jest.Mock<{}>;
-};
