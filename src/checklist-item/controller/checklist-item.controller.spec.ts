@@ -2,9 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ChecklistItemController } from './checklist-item.controller';
 import { ChecklistItemDto } from '../dto/checklist-item.dto';
 import { ChecklistItemService } from '../service/checklist-item/checklist-item.service';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { ChecklistItem } from '../../../dist/checklist-item/entity/checklist-item';
-import { Repository } from 'typeorm';
+
 
 jest.mock('../service/checklist-item/checklist-item.service');
 
@@ -56,26 +54,39 @@ describe('--- ChecklistItemController ---', () => {
     });
   });
 
+  it('Item을 수정할 수 있다', async () => {
+    const item1 = new ChecklistItemDto();
+    item1.id = 1;
+    item1.item = 'Go to school';
+
+    const updatedItem = new ChecklistItemDto();
+    updatedItem.id = 1;
+    updatedItem.item = 'Go to hell';
+
+    service.updateOne = jest.fn().mockResolvedValue(updatedItem);
+
+    return controller
+      .update(item1.id, updatedItem)
+      .then((result: ChecklistItemDto) => {
+        expect(service.updateOne).toHaveBeenCalled();
+        expect(result).toBe(updatedItem);
+      });
+  });
+
+  it('Item을 삭제할 수 있다', async () => {
+    const item1 = new ChecklistItemDto();
+    item1.id = 1;
+    item1.item = 'Go to school';
+
+    service.deleteOne = jest.fn().mockResolvedValue(item1);
+
+    return controller.deleteOne(item1.id).then((result: ChecklistItemDto) => {
+      expect(service.deleteOne).toHaveBeenCalled();
+      expect(result).toBe(item1);
+    });
+  });
+
   afterEach(() => {
     jest.resetAllMocks();
   });
 });
-
-// export const repositoryMockFactory: jest.Mock<
-//   {
-//     find: jest.Mock<any, any>;
-//     findOne: jest.Mock<any, any>;
-//     save: jest.Mock<any, any>;
-//     update: jest.Mock<any, any>;
-//   },
-//   []
-// > = jest.fn(() => ({
-//   findOne: jest.fn(),
-//   find: jest.fn(),
-//   update: jest.fn(),
-//   save: jest.fn(),
-// }));
-//
-// export type MockType<T> = {
-//   [P in keyof T]: jest.Mock<{}>;
-// };

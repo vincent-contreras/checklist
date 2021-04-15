@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { ChecklistItemService } from '../service/checklist-item/checklist-item.service';
-import { ChecklistItemDto } from '../dto/checklist-item.dto'
+import { ChecklistItemDto } from '../dto/checklist-item.dto';
 
 @Controller('checklist-item')
 export class ChecklistItemController {
@@ -21,8 +21,13 @@ export class ChecklistItemController {
     return this.checklistItemsSvc.findOne({ id: id} );
   }
 
-  @Patch('/:id' )
+  @Patch('/:id')
   async update(@Param('id') id: number, @Body() item: ChecklistItemDto): Promise<ChecklistItemDto> {
     return this.checklistItemsSvc.updateOne(id, item.item);
+  }
+
+  @Delete('/:id')
+  async deleteOne(@Param('id') id): Promise<ChecklistItemDto> {
+    return this.checklistItemsSvc.deleteOne(id);
   }
 }
