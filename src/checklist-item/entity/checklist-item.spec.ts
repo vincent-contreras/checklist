@@ -12,20 +12,3 @@ describe('ChecklistItemEntity', () => {
     expect(checklistItem.item).toBeUndefined();
   });
 });
-
-describe('ChecklistItemRepository', () => {
-  let repo: Repository<ChecklistItem>;
-  let repository;
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [ChecklistItemController],
-      providers: [ChecklistItemService],
-    }).compile();
-
-    repo = module.get<Repository<ChecklistItem>>(
-      getRepositoryToken(ChecklistItem),
-    );
-  });
-
-  it('Item이 null되면 안 된다', () => {});
-});
