@@ -12,6 +12,11 @@
 $ yarn install
 ```
 
+## Running the database
+```bash
+$ docker-compose up -d
+```
+
 ## Running the app | App 실행
 
 ```bash
