@@ -1,3 +1,13 @@
+let rootDir = __dirname
+
+if (process.argv[0].includes('ts-node')) {
+  rootDir += '/src'
+} else {
+  rootDir += '/dist'
+}
+
+console.log('ROOTDIR: ' + rootDir);
+
 module.exports = {
   type: process.env.DB_TYPE,
   host: process.env.DB_HOST,
@@ -5,9 +15,9 @@ module.exports = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  synchronize: true,
-  migrations: [`${__dirname}/src/migrations/*{.js,.ts}`],
-  entities: [`${__dirname}/**/*.entity{.js,.ts}`],
+  synchronize: false,
+  migrations: [`${rootDir}/migrations/*{.js,.ts}`],
+  entities: [`${rootDir}/**/*.entity{.js,.ts}`],
   cli: {
     entitiesDir: 'src',
     migrationsDir: 'src/migrations',
