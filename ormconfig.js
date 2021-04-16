@@ -1,12 +1,10 @@
 let rootDir = __dirname
 
 if (process.argv[0].includes('ts-node')) {
-  rootDir += '/src'
+  rootDir += '/src';
 } else {
-  rootDir += '/dist'
+  rootDir += '/dist';
 }
-
-console.log('ROOTDIR: ' + rootDir);
 
 module.exports = {
   type: process.env.DB_TYPE,
@@ -15,6 +13,8 @@ module.exports = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  logging: true,
+  logger: 'advanced-console',
   synchronize: false,
   migrations: [`${rootDir}/migrations/*{.js,.ts}`],
   entities: [`${rootDir}/**/*.entity{.js,.ts}`],
@@ -24,6 +24,3 @@ module.exports = {
     subscribersDir: 'src/subscriber',
   },
 };
-
-console.log('Ormconfig file read!');
-console.log(module.exports);
