@@ -22,8 +22,10 @@ export class ChecklistItemService {
   findOne(id): Promise<ChecklistItemDto> {
     return this.checklistRepository.findOne(id);
   }
-  async updateOne(updatedValue: ChecklistItemDto): Promise<ChecklistItem> {
-    const { id } = updatedValue;
+  async updateOne(
+    id: number,
+    updatedValue: ChecklistItemDto,
+  ): Promise<ChecklistItem> {
     await this.checklistRepository.update({ id }, updatedValue);
     const item = await this.checklistRepository.findOne(id);
     return item;

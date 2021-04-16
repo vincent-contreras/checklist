@@ -22,7 +22,7 @@ export class ChecklistItemController {
 
   @Patch('/:id')
   async update(@Param('id') id: number, @Body() item: ChecklistItemDto): Promise<ChecklistItemDto> {
-    return this.checklistItemsSvc.updateOne(item);
+    return this.checklistItemsSvc.updateOne(id, item);
   }
 
   @Delete('/:id')

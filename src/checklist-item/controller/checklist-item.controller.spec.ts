@@ -2,8 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ChecklistItemController } from './checklist-item.controller';
 import { ChecklistItemDto } from '../dto/checklist-item.dto';
 import { ChecklistItemService } from '../service/checklist-item/checklist-item.service';
+import { ChecklistItem } from '../entity/checklist-item.entity';
 
 jest.mock('../service/checklist-item/checklist-item.service');
+
+const inputDto = new ChecklistItemDto('Go to school', 1);
+const resultItem = new ChecklistItem();
+resultItem.id = 1;
+resultItem.item = 'Go to school';
+
+const updatedItem = new ChecklistItem();
+updatedItem.id = 1;
+updatedItem.item = 'Go to hell';
+
+const listResult = [resultItem];
 
 describe('--- ChecklistItemController ---', () => {
   let controller: ChecklistItemController;
@@ -24,61 +36,37 @@ describe('--- ChecklistItemController ---', () => {
   });
 
   it('Item을 추가할 수 있다', async () => {
-    const item1 = new ChecklistItemDto();
-    item1.id = 1;
-    item1.item = 'Go to school';
+    service.create = jest.fn().mockResolvedValue(resultItem);
 
-    service.create = jest.fn().mockResolvedValue(item1);
-
-    return controller.create(item1).then((result: ChecklistItemDto) => {
+    return controller.create(resultItem).then((result: ChecklistItemDto) => {
       expect(service.create).toHaveBeenCalled();
-      expect(result).toBe(item1);
+      expect(result).toBe(resultItem);
     });
   });
 
   it('Item을 한개 조회', async () => {
-    const expectedResult = new ChecklistItemDto();
-    expectedResult.id = 0;
-    expectedResult.item = 'Test';
+    service.findOne = jest.fn().mockResolvedValue(resultItem);
 
-    service.findOne = jest.fn().mockResolvedValue(expectedResult);
-
-    return controller
-      .getOne(expectedResult.id)
-      .then((result: ChecklistItemDto) => {
-        expect(service.findOne).toHaveBeenCalledWith({ id: expectedResult.id });
-        expect(result).toBe(expectedResult);
-      });
+    return controller.getOne(resultItem.id).then((result: ChecklistItemDto) => {
+      expect(service.findOne).toHaveBeenCalledWith({ id: resultItem.id });
+      expect(result).toBe(resultItem);
+    });
   });
 
   it('리스트 조회 할 수 있다', async () => {
-    const item1 = new ChecklistItemDto();
-    item1.id = 1;
-    item1.item = 'Go to school';
-
-    const expectedResult = [item1];
-
-    service.findAll = jest.fn().mockResolvedValue(expectedResult);
+    service.findAll = jest.fn().mockResolvedValue(listResult);
 
     return controller.getAll().then((result: []) => {
       expect(service.findAll).toHaveBeenCalled();
-      expect(result).toBe(expectedResult);
+      expect(result).toBe(listResult);
     });
   });
 
   it('Item을 수정할 수 있다', async () => {
-    const item1 = new ChecklistItemDto();
-    item1.id = 1;
-    item1.item = 'Go to school';
-
-    const updatedItem = new ChecklistItemDto();
-    updatedItem.id = 1;
-    updatedItem.item = 'Go to hell';
-
     service.updateOne = jest.fn().mockResolvedValue(updatedItem);
 
     return controller
-      .update(item1.id, updatedItem)
+      .update(resultItem.id, updatedItem)
       .then((result: ChecklistItemDto) => {
         expect(service.updateOne).toHaveBeenCalled();
         expect(result).toBe(updatedItem);
@@ -86,13 +74,9 @@ describe('--- ChecklistItemController ---', () => {
   });
 
   it('Item을 삭제할 수 있다', async () => {
-    const item1 = new ChecklistItemDto();
-    item1.id = 1;
-    item1.item = 'Go to school';
-
     service.deleteOne = jest.fn().mockResolvedValue({ deleted: true });
 
-    return controller.deleteOne(item1.id).then((result) => {
+    return controller.deleteOne(resultItem.id).then((result) => {
       expect(service.deleteOne).toHaveBeenCalled();
       expect(result.deleted).toBe(true);
     });
