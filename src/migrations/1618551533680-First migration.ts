@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class FirstMigration1618551246085 implements MigrationInterface {
-    name = 'FirstMigration1618551246085'
+export class FirstMigration1618551533680 implements MigrationInterface {
+    name = 'FirstMigration1618551533680'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query("CREATE TABLE `checklist_item` (`id` int NOT NULL AUTO_INCREMENT, `item` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB");
