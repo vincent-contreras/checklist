@@ -51,7 +51,7 @@ describe('--- ChecklistItemService ---', () => {
     // const result = await service.create(expectedResult)
     // expect(result).toEqual(expectedResult);
 
-    return service.create(expectedResult).then((result: ChecklistItemDto) => {
+    return service.create(expectedResult).then((result: ChecklistItem) => {
       expect(repo.create).toHaveBeenCalled();
       expect(repo.save).toHaveBeenCalled();
       expect(result).toBe(expectedResult);
@@ -82,7 +82,7 @@ describe('--- ChecklistItemService ---', () => {
 
     return service
       .updateOne(existingItem.id, updatedItem)
-      .then((result: ChecklistItemDto) => {
+      .then((result: ChecklistItem) => {
         expect(repo.update).toHaveBeenCalled();
         expect(result).toBe(updatedItem);
       });

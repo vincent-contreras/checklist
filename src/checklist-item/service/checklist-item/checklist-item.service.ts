@@ -26,8 +26,12 @@ export class ChecklistItemService {
     id: number,
     updatedValue: ChecklistItemDto,
   ): Promise<ChecklistItem> {
-    await this.checklistRepository.update({ id }, updatedValue);
     const item = await this.checklistRepository.findOne(id);
+
+    if (!item) {
+      throw new BadRequestException('Item should exist');
+    }
+    await this.checklistRepository.update({ id }, updatedValue);
     return item;
   }
   async deleteOne(id): Promise<{ deleted: boolean; message?: string }> {
