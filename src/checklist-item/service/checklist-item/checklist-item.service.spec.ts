@@ -5,9 +5,13 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { ChecklistItemDto } from '../../dto/checklist-item.dto';
 import { ChecklistItem } from '../../entity/checklist-item.entity';
 
-const expectedResult = new ChecklistItemDto();
+const expectedResult = new ChecklistItem();
 expectedResult.id = 0;
 expectedResult.item = 'Test';
+
+const existingItem = new ChecklistItem();
+existingItem.id = 1;
+existingItem.item = 'Go to heaven';
 
 const resultArray = [expectedResult];
 
@@ -71,17 +75,17 @@ describe('--- ChecklistItemService ---', () => {
   });
 
   it('Item을 수정할 수 있다', async () => {
-    const updatedItem = new ChecklistItemDto();
-    updatedItem.id = 1;
-    updatedItem.item = 'Go to hell';
+    const updatedItem = new ChecklistItemDto('Go to Hell');
 
     // override original find one function
     repo.findOne = jest.fn().mockResolvedValue(updatedItem);
 
-    return service.updateOne(updatedItem).then((result: ChecklistItemDto) => {
-      expect(repo.update).toHaveBeenCalled();
-      expect(result).toBe(updatedItem);
-    });
+    return service
+      .updateOne(existingItem.id, updatedItem)
+      .then((result: ChecklistItemDto) => {
+        expect(repo.update).toHaveBeenCalled();
+        expect(result).toBe(updatedItem);
+      });
   });
   it('Item을 삭제할 수 있다', async () => {
     await expect(service.deleteOne(expectedResult.id)).resolves.toEqual({
