@@ -2,22 +2,22 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
 
-## Description | 데스크립쑌
+## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository complete with tests.
 
-## Installation | 설치
+## Installation
 
 ```bash
 $ yarn install
 ```
 
-## Running the database
+## Running the local development database and cache (if any)
 ```bash
 $ docker-compose up -d
 ```
 
-## Running the app | App 실행
+## Running the app
 
 ```bash
 # development
@@ -32,12 +32,12 @@ $ yarn run start:prod
 
 ## Migrations
 
-### Generate a migration | Migration 자동생성
+### Generate a migration
 ```bash
 $ yarn typeorm migration:generate -m "My Migration"
 ```
 
-### Run the migrations | Migration 실행
+### Run the migrations
 ```bash
 $ yarn typeorm migration:run
 ```
@@ -56,8 +56,8 @@ $ yarn test:cov
 ```
 
 ## Support
-
-For more information, please visit the NestJS web site.
+For more information specific to this project, contact me directly here in Github.
+For more information about NestJS, please visit the NestJS web site.
 
 ## License
 
